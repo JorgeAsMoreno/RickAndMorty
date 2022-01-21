@@ -1,6 +1,6 @@
 import Navbar from './Components/Navbar/Navbar';
 import Header from './Components/Header/Header';
-import Characters from './Components/Characters/Characters';
+import Container from './Components/Container/Container';
 import './App.scss';
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <Navbar />
       <Header />
-      <Characters />
+      <Container />
     </div>
   );
 }
