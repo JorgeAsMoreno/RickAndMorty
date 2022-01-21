@@ -20,7 +20,6 @@ const Characters = () => {
   return (
     <main className='characters-container'>
       {character.map((character,index) => {
-        console.log(character)
         return (
           <CharacterCard
             gender={character.gender}
