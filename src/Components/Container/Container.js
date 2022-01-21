@@ -1,12 +1,15 @@
 import React from 'react'
 import axios from 'axios'
-import { useState , useEffect} from 'react'
+import { useState , useEffect, useMemo} from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import CharacterCard from './CharacterCard'
+import Filter from './Filter';
 import './container.scss'
 
 const Container = () => {
   const [character, setCharacter] = useState([])
+  const [search, setSearch] = useState('')
+
   useEffect(() => {
     axios.get('https://rickandmortyapi.com/api/character')
     .then(function (response) {
@@ -17,7 +20,20 @@ const Container = () => {
     .catch(function (error) {
       console.log(error);
     })
-  }, [])
+  }, [setCharacter])
+
+  const handleChange = (e) => {
+    return setSearch(e.target.value)
+  }
+
+  const characters = useMemo(() => {
+    return character.filter((element) => {
+      if (element.name.toString().toLowerCase().includes(search.toLowerCase())) {
+        return element
+      }
+    })
+  }, [search, character])
+
   return (
     <Tabs>
       <TabList>
@@ -25,9 +41,12 @@ const Container = () => {
         <Tab>Location</Tab>
         <Tab>Episode</Tab>
       </TabList>
+
+      <Filter value={search} onChange={handleChange}/>
+
       <TabPanel>
         <main className='characters-container'>
-          {character.map((character,index) => {
+          {characters.map((character,index) => {
             return (
               <CharacterCard
                 gender={character.gender}
