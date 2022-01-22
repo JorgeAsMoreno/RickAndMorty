@@ -4,15 +4,15 @@ import { useState , useEffect, useMemo} from 'react'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import CharacterCard from './CharacterCard'
 import Filter from './Filter';
-import './container.scss'
 import Location from './Location';
+import Episodes from './Episodes';
+import './container.scss'
 
 const Container = () => {
   const [character, setCharacter] = useState([])
   const [location, setLocation] = useState([])
+  const [episode, setEpisode] = useState([])
   const [search, setSearch] = useState('')
-  const [searchLocation, setSearchLocation] = useState('')
-
 
   useEffect(() => {
     axios.get('https://rickandmortyapi.com/api/character')
@@ -29,7 +29,6 @@ const Container = () => {
   useEffect(() => {
     axios.get('https://rickandmortyapi.com/api/location')
     .then(function (response) {
-      console.log('location', response)
       if (response.status === 200) {
         setLocation(response.data.results)
       }
@@ -39,10 +38,22 @@ const Container = () => {
     })
   }, [setLocation])
 
+  useEffect(() => {
+    axios.get('https://rickandmortyapi.com/api/episode')
+    .then(function (response) {
+      console.log('episodes', response.data)
+      if (response.status === 200) {
+        setEpisode(response.data.results)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+  }, [setEpisode])
 
   const handleChange = (e) => {
+    console.log(e)
     setSearch(e.target.value)
-    setSearchLocation(e.target.value)
   }
 
   const characters = useMemo(() => {
@@ -55,11 +66,19 @@ const Container = () => {
 
   const locations = useMemo(() => {
     return location.filter((element) => {
-      if (element.name.toString().toLowerCase().includes(searchLocation.toLowerCase())) {
+      if (element.name.toString().toLowerCase().includes(search.toLowerCase())) {
         return element
       }
     })
-  }, [searchLocation, location])
+  }, [search, location])
+
+  const episodes = useMemo(() => {
+    return episode.filter((element) => {
+      if (element.name.toString().toLowerCase().includes(search.toLowerCase())) {
+        return element
+      }
+    })
+  }, [search, episode])
 
   return (
     <main className='main-continer'>
@@ -107,7 +126,20 @@ const Container = () => {
           </div>
         </TabPanel>
         <TabPanel>
-          Episode
+          <div className='episode-container'>
+            {
+              episodes.map((episode, i) => {
+                return (
+                  <Episodes
+                    air_date={episode.air_date}
+                    episode={episode.episode}
+                    key={episode.id}
+                    name={episode.name}
+                  />
+                )
+              })
+            }
+          </div>
         </TabPanel>
       </Tabs>
     </main>
