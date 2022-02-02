@@ -5,7 +5,7 @@ const Filter = ({ onChange, value }) => {
     <div className="filter-container">
       <input
         onChange={onChange}
-        placeholder="Filter"
+        placeholder="Filter by name"
         value={value}
       />
     </div>
